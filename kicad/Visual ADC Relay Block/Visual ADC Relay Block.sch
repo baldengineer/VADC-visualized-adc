@@ -1,0 +1,473 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A3 16535 11693
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L power:GND #PWR03
+U 1 1 6023B38A
+P 11050 9750
+F 0 "#PWR03" H 11050 9500 50  0001 C CNN
+F 1 "GND" H 11055 9577 50  0000 C CNN
+F 2 "" H 11050 9750 50  0001 C CNN
+F 3 "" H 11050 9750 50  0001 C CNN
+	1    11050 9750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Relay:Y14x-1C-xxDS K1
+U 1 1 6023B39F
+P 10850 8250
+F 0 "K1" H 10420 8204 50  0000 R CNN
+F 1 "DIPxx-1Cxx-51x" H 10420 8295 50  0001 R CNN
+F 2 "Relay_THT:Relay_SPDT_HsinDa_Y14" H 11300 8200 50  0001 L CNN
+F 3 "https://standexelectronics.com/wp-content/uploads/datasheet_reed_relay_DIP.pdf" H 10850 8250 50  0001 C CNN
+	1    10850 8250
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 6023B3A6
+P 10750 8650
+F 0 "#PWR01" H 10750 8400 50  0001 C CNN
+F 1 "GND" H 10755 8477 50  0000 C CNN
+F 2 "" H 10750 8650 50  0001 C CNN
+F 3 "" H 10750 8650 50  0001 C CNN
+	1    10750 8650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10750 8550 10750 8650
+$Comp
+L Device:LED_Small D2
+U 1 1 60277368
+P 12800 9350
+F 0 "D2" V 12846 9280 50  0001 R CNN
+F 1 "LED_Small" V 12755 9280 50  0001 R CNN
+F 2 "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm" V 12800 9350 50  0001 C CNN
+F 3 "~" V 12800 9350 50  0001 C CNN
+	1    12800 9350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED_Small D3
+U 1 1 60279C79
+P 12950 9350
+F 0 "D3" V 12996 9280 50  0001 R CNN
+F 1 "LED_Small" V 12905 9280 50  0001 R CNN
+F 2 "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm" V 12950 9350 50  0001 C CNN
+F 3 "~" V 12950 9350 50  0001 C CNN
+	1    12950 9350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED_Small D4
+U 1 1 6027A13B
+P 12650 9350
+F 0 "D4" V 12696 9280 50  0001 R CNN
+F 1 "LED_Small" V 12605 9280 50  0001 R CNN
+F 2 "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm" V 12650 9350 50  0001 C CNN
+F 3 "~" V 12650 9350 50  0001 C CNN
+	1    12650 9350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED_Small D5
+U 1 1 6027A56C
+P 13400 9350
+F 0 "D5" V 13446 9280 50  0001 R CNN
+F 1 "LED_Small" V 13355 9280 50  0001 R CNN
+F 2 "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm" V 13400 9350 50  0001 C CNN
+F 3 "~" V 13400 9350 50  0001 C CNN
+	1    13400 9350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:D_Small D1
+U 1 1 602E5083
+P 11700 8300
+F 0 "D1" V 11654 8370 50  0000 L CNN
+F 1 "1n4001" V 11745 8370 50  0000 L CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" V 11700 8300 50  0001 C CNN
+F 3 "~" V 11700 8300 50  0001 C CNN
+	1    11700 8300
+	0    1    1    0   
+$EndComp
+Text Label 9400 8350 2    50   ~ 0
+BitEnable
+Wire Wire Line
+	8900 8350 9400 8350
+Text Label 9550 10450 2    50   ~ 0
+Vref
+Wire Wire Line
+	9050 10450 9550 10450
+Wire Wire Line
+	9050 10350 9550 10350
+Text Label 9550 10350 2    50   ~ 0
+Relay-5V
+Text Label 9550 9850 2    50   ~ 0
+GND
+Text Label 9550 9950 2    50   ~ 0
+Vin
+Wire Wire Line
+	8900 8550 9400 8550
+Text Label 9400 8550 2    50   ~ 0
+LEDEnable
+Text Label 9750 7250 0    50   ~ 0
+Vin
+Text Label 12100 7250 2    50   ~ 0
+Vout
+$Comp
+L Device:R_Small R2
+U 1 1 60210776
+P 10650 7600
+F 0 "R2" H 10591 7554 50  0000 R CNN
+F 1 "2R" H 10591 7645 50  0000 R CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" H 10650 7600 50  0001 C CNN
+F 3 "~" H 10650 7600 50  0001 C CNN
+	1    10650 7600
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J2
+U 1 1 6021DD59
+P 13300 7400
+F 0 "J2" H 13380 7392 50  0000 L CNN
+F 1 "Output1" H 13380 7301 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal" H 13300 7400 50  0001 C CNN
+F 3 "~" H 13300 7400 50  0001 C CNN
+	1    13300 7400
+	1    0    0    -1  
+$EndComp
+Text Label 12600 7800 0    50   ~ 0
+Relay-5V
+Wire Wire Line
+	13100 7800 12600 7800
+Wire Wire Line
+	13100 7700 12600 7700
+Text Label 12600 7700 0    50   ~ 0
+Vref
+Text Label 12600 7500 0    50   ~ 0
+GND
+Wire Wire Line
+	13100 7500 12600 7500
+Text Label 12600 7400 0    50   ~ 0
+Vout
+Wire Wire Line
+	13100 7400 12600 7400
+$Comp
+L Connector_Generic:Conn_01x03 J3
+U 1 1 60223842
+P 8700 8450
+F 0 "J3" H 8618 8125 50  0000 C CNN
+F 1 "Conn_01x03" H 8618 8216 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Horizontal" H 8700 8450 50  0001 C CNN
+F 3 "~" H 8700 8450 50  0001 C CNN
+	1    8700 8450
+	-1   0    0    1   
+$EndComp
+Text Label 8850 8950 2    50   ~ 0
+GND
+$Comp
+L power:GND #PWR02
+U 1 1 602267C1
+P 8950 9050
+F 0 "#PWR02" H 8950 8800 50  0001 C CNN
+F 1 "GND" H 8955 8877 50  0000 C CNN
+F 2 "" H 8950 9050 50  0001 C CNN
+F 3 "" H 8950 9050 50  0001 C CNN
+	1    8950 9050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8850 8950 8950 8950
+Wire Wire Line
+	8950 8950 8950 9050
+Wire Wire Line
+	11050 7850 11050 7900
+Text Label 11050 7850 0    50   ~ 0
+Relay-5V
+Text Label 10550 8800 1    50   ~ 0
+Vref
+Wire Wire Line
+	10550 8550 10550 8800
+$Comp
+L Device:R_Small R4
+U 1 1 6022A456
+P 13050 9000
+F 0 "R4" V 12854 9000 50  0000 C CNN
+F 1 "R" V 12945 9000 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 13050 9000 50  0001 C CNN
+F 3 "~" H 13050 9000 50  0001 C CNN
+	1    13050 9000
+	-1   0    0    1   
+$EndComp
+$Comp
+L My_Library:IRLD110P Q1
+U 1 1 6022D5E7
+P 12950 8600
+F 0 "Q1" H 13188 8600 60  0000 L CNN
+F 1 "MOSFET_N" H 13189 8547 60  0001 L CNN
+F 2 "My Libraries:DIP-4_W7.62mm_LongPads_for_IRLD110" H 12950 8600 60  0001 C CNN
+F 3 "" H 12950 8600 60  0000 C CNN
+	1    12950 8600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 6022E166
+P 12950 9600
+F 0 "#PWR04" H 12950 9350 50  0001 C CNN
+F 1 "GND" H 12955 9427 50  0000 C CNN
+F 2 "" H 12950 9600 50  0001 C CNN
+F 3 "" H 12950 9600 50  0001 C CNN
+	1    12950 9600
+	1    0    0    -1  
+$EndComp
+Text Label 13050 8300 0    50   ~ 0
+Relay-5V
+Wire Wire Line
+	13050 8300 13050 8400
+Text Label 12000 8600 0    50   ~ 0
+LEDEnable
+$Comp
+L Device:R_Small R3
+U 1 1 6023B7B4
+P 12550 8600
+F 0 "R3" H 12491 8554 50  0000 R CNN
+F 1 "2R" H 12491 8645 50  0000 R CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 12550 8600 50  0001 C CNN
+F 3 "~" H 12550 8600 50  0001 C CNN
+	1    12550 8600
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	12750 8600 12650 8600
+Wire Wire Line
+	12000 8600 12450 8600
+$Comp
+L Device:R_Small R1
+U 1 1 6023F352
+P 10200 7250
+F 0 "R1" V 10004 7250 50  0000 C CNN
+F 1 "R" V 10095 7250 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" H 10200 7250 50  0001 C CNN
+F 3 "~" H 10200 7250 50  0001 C CNN
+	1    10200 7250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9750 7250 10100 7250
+$Comp
+L Device:R_Small R5
+U 1 1 602457CE
+P 10550 9450
+F 0 "R5" H 10491 9404 50  0000 R CNN
+F 1 "2R" H 10491 9495 50  0000 R CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 10550 9450 50  0001 C CNN
+F 3 "~" H 10550 9450 50  0001 C CNN
+	1    10550 9450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	10750 9450 10650 9450
+Wire Wire Line
+	10000 9450 10450 9450
+Text Label 10000 9450 0    50   ~ 0
+BitEnable
+Wire Wire Line
+	11700 8200 11700 7900
+Wire Wire Line
+	11700 8400 11700 8600
+Wire Wire Line
+	11050 9650 11050 9750
+Wire Wire Line
+	11050 8550 11050 8600
+Wire Wire Line
+	11050 8600 11700 8600
+Connection ~ 11050 8600
+Wire Wire Line
+	11050 8600 11050 9250
+Wire Wire Line
+	11050 7900 11700 7900
+Connection ~ 11050 7900
+Wire Wire Line
+	11050 7900 11050 7950
+$Comp
+L Device:LED_Small D6
+U 1 1 60259EEF
+P 13100 9350
+F 0 "D6" V 13146 9280 50  0001 R CNN
+F 1 "LED_Small" V 13055 9280 50  0001 R CNN
+F 2 "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm" V 13100 9350 50  0001 C CNN
+F 3 "~" V 13100 9350 50  0001 C CNN
+	1    13100 9350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED_Small D7
+U 1 1 60259EF5
+P 13250 9350
+F 0 "D7" V 13296 9280 50  0001 R CNN
+F 1 "LED_Small" V 13205 9280 50  0001 R CNN
+F 2 "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm" V 13250 9350 50  0001 C CNN
+F 3 "~" V 13250 9350 50  0001 C CNN
+	1    13250 9350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	12650 9450 12650 9500
+Wire Wire Line
+	13400 9500 13400 9450
+Wire Wire Line
+	13250 9450 13250 9500
+Connection ~ 13250 9500
+Wire Wire Line
+	13250 9500 13400 9500
+Wire Wire Line
+	13100 9450 13100 9500
+Wire Wire Line
+	12650 9500 12800 9500
+Connection ~ 13100 9500
+Wire Wire Line
+	13100 9500 13250 9500
+Wire Wire Line
+	12950 9450 12950 9500
+Connection ~ 12950 9500
+Wire Wire Line
+	12950 9500 13100 9500
+Wire Wire Line
+	12800 9450 12800 9500
+Connection ~ 12800 9500
+Wire Wire Line
+	12800 9500 12950 9500
+Wire Wire Line
+	12650 9250 12650 9200
+Wire Wire Line
+	12650 9200 12800 9200
+Wire Wire Line
+	13400 9200 13400 9250
+Wire Wire Line
+	12800 9250 12800 9200
+Connection ~ 12800 9200
+Wire Wire Line
+	13100 9200 13100 9250
+Wire Wire Line
+	12800 9200 12950 9200
+Connection ~ 13100 9200
+Wire Wire Line
+	13100 9200 13250 9200
+Wire Wire Line
+	13250 9200 13250 9250
+Connection ~ 13250 9200
+Wire Wire Line
+	13250 9200 13400 9200
+Wire Wire Line
+	12950 9250 12950 9200
+Connection ~ 12950 9200
+Wire Wire Line
+	12950 9200 13050 9200
+Wire Wire Line
+	13050 9100 13050 9200
+Connection ~ 13050 9200
+Wire Wire Line
+	13050 9200 13100 9200
+Wire Wire Line
+	13050 8800 13050 8900
+Wire Wire Line
+	12950 9500 12950 9600
+Text Notes 13700 9450 0    50   ~ 0
+20 mA * 6 = 120 mA
+Text Notes 13700 8650 0    50   ~ 0
+5-2 = 3V * 120 mA = 360 mW\n3V/120mA = 25 ohm\n\n5-3.3 = 1.7v * 120 mA = 204 mW\n5/1.7 = 14ohm (120 mA)\n              25ohm (~60 mA)
+$Comp
+L My_Library:IRLD110P Q2
+U 1 1 60272374
+P 10950 9450
+F 0 "Q2" H 11188 9450 60  0000 L CNN
+F 1 "MOSFET_N" H 11189 9397 60  0001 L CNN
+F 2 "My Libraries:DIP-4_W7.62mm_LongPads_for_IRLD110" H 10950 9450 60  0001 C CNN
+F 3 "" H 10950 9450 60  0000 C CNN
+	1    10950 9450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10300 7250 10650 7250
+Wire Wire Line
+	10650 7500 10650 7250
+Connection ~ 10650 7250
+Wire Wire Line
+	10650 7250 12100 7250
+Wire Wire Line
+	10650 7700 10650 7950
+$Comp
+L Connector_Generic:Conn_01x02 J1
+U 1 1 602B6BEB
+P 8850 9950
+F 0 "J1" H 8768 9625 50  0000 C CNN
+F 1 "Conn_01x02" H 8768 9716 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Horizontal" H 8850 9950 50  0001 C CNN
+F 3 "~" H 8850 9950 50  0001 C CNN
+	1    8850 9950
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J4
+U 1 1 602B72C6
+P 8850 10450
+F 0 "J4" H 8768 10125 50  0000 C CNN
+F 1 "Conn_01x02" H 8768 10216 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Horizontal" H 8850 10450 50  0001 C CNN
+F 3 "~" H 8850 10450 50  0001 C CNN
+	1    8850 10450
+	-1   0    0    1   
+$EndComp
+$Comp
+L Jumper:SolderJumper_2_Open JP1
+U 1 1 602BC414
+P 9750 9900
+F 0 "JP1" V 9704 9968 50  0000 L CNN
+F 1 "SolderJumper_2_Open" V 9795 9968 50  0000 L CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_TrianglePad1.0x1.5mm" H 9750 9900 50  0001 C CNN
+F 3 "~" H 9750 9900 50  0001 C CNN
+	1    9750 9900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9750 9750 9650 9750
+Wire Wire Line
+	9650 9750 9650 9850
+Wire Wire Line
+	9050 9850 9650 9850
+Wire Wire Line
+	9750 10050 9650 10050
+Wire Wire Line
+	9650 10050 9650 9950
+Wire Wire Line
+	9050 9950 9650 9950
+Text Label 9150 8450 2    50   ~ 0
+GND
+Wire Wire Line
+	8900 8450 9150 8450
+$Comp
+L Connector_Generic:Conn_01x02 J5
+U 1 1 602C3EE2
+P 13300 7700
+F 0 "J5" H 13380 7692 50  0000 L CNN
+F 1 "Output2" H 13380 7601 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal" H 13300 7700 50  0001 C CNN
+F 3 "~" H 13300 7700 50  0001 C CNN
+	1    13300 7700
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
