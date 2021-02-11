@@ -784,10 +784,10 @@ $EndComp
 Wire Wire Line
 	12700 5900 12700 5950
 $Comp
-L Device:C_Small C?
+L Device:C_Small C3
 U 1 1 604CF5FA
 P 12700 5800
-F 0 "C?" H 12792 5846 50  0000 L CNN
+F 0 "C3" H 12792 5846 50  0000 L CNN
 F 1 "22uF" H 12792 5755 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 12700 5800 50  0001 C CNN
 F 3 "~" H 12700 5800 50  0001 C CNN
@@ -795,10 +795,10 @@ F 3 "~" H 12700 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C4
 U 1 1 604CFC66
 P 13050 5800
-F 0 "C?" H 13142 5846 50  0000 L CNN
+F 0 "C4" H 13142 5846 50  0000 L CNN
 F 1 "22uF" H 13142 5755 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13050 5800 50  0001 C CNN
 F 3 "~" H 13050 5800 50  0001 C CNN
@@ -806,10 +806,10 @@ F 3 "~" H 13050 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C5
 U 1 1 604D0036
 P 13400 5800
-F 0 "C?" H 13492 5846 50  0000 L CNN
+F 0 "C5" H 13492 5846 50  0000 L CNN
 F 1 "22uF" H 13492 5755 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13400 5800 50  0001 C CNN
 F 3 "~" H 13400 5800 50  0001 C CNN
@@ -817,10 +817,10 @@ F 3 "~" H 13400 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C6
 U 1 1 604D02C4
 P 13750 5800
-F 0 "C?" H 13842 5846 50  0000 L CNN
+F 0 "C6" H 13842 5846 50  0000 L CNN
 F 1 "22uF" H 13842 5755 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13750 5800 50  0001 C CNN
 F 3 "~" H 13750 5800 50  0001 C CNN
@@ -855,4 +855,48 @@ Wire Wire Line
 Connection ~ 13400 5650
 Wire Wire Line
 	13400 5650 13050 5650
+$Comp
+L Mechanical:MountingHole H?
+U 1 1 60553553
+P 13850 3850
+F 0 "H?" H 13950 3850 50  0000 L CNN
+F 1 "MountingHole" H 13950 3805 50  0001 L CNN
+F 2 "MountingHole:MountingHole_2.7mm" H 13850 3850 50  0001 C CNN
+F 3 "~" H 13850 3850 50  0001 C CNN
+	1    13850 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H?
+U 1 1 60553DE2
+P 13600 3850
+F 0 "H?" H 13700 3850 50  0000 L CNN
+F 1 "MountingHole" H 13700 3805 50  0001 L CNN
+F 2 "MountingHole:MountingHole_2.7mm" H 13600 3850 50  0001 C CNN
+F 3 "~" H 13600 3850 50  0001 C CNN
+	1    13600 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H?
+U 1 1 60553F0C
+P 13350 3850
+F 0 "H?" H 13450 3850 50  0000 L CNN
+F 1 "MountingHole" H 13450 3805 50  0001 L CNN
+F 2 "MountingHole:MountingHole_2.7mm" H 13350 3850 50  0001 C CNN
+F 3 "~" H 13350 3850 50  0001 C CNN
+	1    13350 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H?
+U 1 1 6055416A
+P 13150 3850
+F 0 "H?" H 13250 3850 50  0000 L CNN
+F 1 "MountingHole" H 13250 3805 50  0001 L CNN
+F 2 "MountingHole:MountingHole_2.7mm" H 13150 3850 50  0001 C CNN
+F 3 "~" H 13150 3850 50  0001 C CNN
+	1    13150 3850
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
