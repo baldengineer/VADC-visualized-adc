@@ -651,17 +651,6 @@ Text Label 15350 8400 3    50   ~ 0
 LED5
 Text Label 14900 8400 3    50   ~ 0
 LED6
-$Comp
-L Connector_Generic:Conn_02x04_Odd_Even J2
-U 1 1 603C4B3A
-P 8350 6850
-F 0 "J2" H 8400 7167 50  0000 C CNN
-F 1 "In" H 8400 7076 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical" H 8350 6850 50  0001 C CNN
-F 3 "~" H 8350 6850 50  0001 C CNN
-	1    8350 6850
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6600 6850 6200 6850
 Text Label 6200 6850 0    50   ~ 0
@@ -881,40 +870,51 @@ Text Label 14900 9100 3    50   ~ 0
 CL6
 Text Label 15200 9100 3    50   ~ 0
 CL4
-Wire Wire Line
-	8150 7050 7750 7050
-Wire Wire Line
-	7750 6850 8150 6850
-Wire Wire Line
-	9050 7050 8650 7050
-Wire Wire Line
-	7750 6950 8150 6950
-Text Label 9050 7050 2    50   ~ 0
-Vref
-Text Label 7750 7050 0    50   ~ 0
-Relay-5V
-Text Label 9050 6950 2    50   ~ 0
-GND
-Wire Wire Line
-	8650 6950 9050 6950
-Text Label 9050 6750 2    50   ~ 0
-LATCH
-Wire Wire Line
-	8650 6750 9050 6750
-Text Label 7750 6750 0    50   ~ 0
-CLK
-Wire Wire Line
-	8150 6750 7750 6750
-Text Label 9050 6850 2    50   ~ 0
-DataIn
-Wire Wire Line
-	8650 6850 9050 6850
 Text Label 6200 6950 0    50   ~ 0
-GND
-Text Label 7750 6850 0    50   ~ 0
 GND
 Text Label 7500 6950 2    50   ~ 0
 Vout
+$Comp
+L Connector_Generic:Conn_02x04_Odd_Even J2
+U 1 1 603C4B3A
+P 8350 6850
+F 0 "J2" H 8400 7167 50  0000 C CNN
+F 1 "In" H 8400 7076 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical" H 8350 6850 50  0001 C CNN
+F 3 "~" H 8350 6850 50  0001 C CNN
+	1    8350 6850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8150 6850 7750 6850
+Text Label 7750 6850 0    50   ~ 0
+DataIn
+Wire Wire Line
+	8150 6750 7750 6750
+Text Label 7750 6750 0    50   ~ 0
+LATCH
+Wire Wire Line
+	8150 6950 7750 6950
 Text Label 7750 6950 0    50   ~ 0
+GND
+Text Label 7750 7050 0    50   ~ 0
+Vref
+Wire Wire Line
+	7750 7050 8150 7050
+Text Label 9050 6950 2    50   ~ 0
 Vin
+Text Label 9050 6850 2    50   ~ 0
+GND
+Wire Wire Line
+	8650 6750 9050 6750
+Text Label 9050 6750 2    50   ~ 0
+CLK
+Text Label 9050 7050 2    50   ~ 0
+Relay-5V
+Wire Wire Line
+	9050 6950 8650 6950
+Wire Wire Line
+	9050 6850 8650 6850
+Wire Wire Line
+	8650 7050 9050 7050
 $EndSCHEMATC
