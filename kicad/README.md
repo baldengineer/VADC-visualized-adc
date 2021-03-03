@@ -1,4 +1,5 @@
 # Visualized ADC KiCad Design Files
+![Rendered vADC bit board](https://github.com/baldengineer/VADC-visualized-adc/blob/main/images/Visual%20ADC%20Relay%20Block%20rev1%20Front.png)
 
 ## Visual ADC Relay Block
 Single bit block of the DAC inside of the ADC. The board contains a relay, R resistor, 2R resistor, LEDs, a shift register, and a buffer. 
