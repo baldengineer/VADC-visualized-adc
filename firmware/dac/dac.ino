@@ -29,12 +29,12 @@ uint32_t set_relay(uint32_t data_stream, bool state, int relay_number) {
 
 void send_data_to_bits(uint32_t data_out) {
 	// X R X X  X X X 1  X R X X  X X X 1   X R X X  X X X 1   X R X X  X X X 1
-	digitalWrite(latch_595, HIGH);
+	digitalWrite(latch_595, LOW);
  	 shiftOut(data_595, clock_595, MSBFIRST, (data_out >> 24));  // bit 4
 	 shiftOut(data_595, clock_595, MSBFIRST, (data_out >> 16));  // bit 3
 	 shiftOut(data_595, clock_595, MSBFIRST, (data_out >> 8));	// bit 2
 	 shiftOut(data_595, clock_595, MSBFIRST, (data_out));		// bit 0
-	digitalWrite(latch_595, LOW);
+	digitalWrite(latch_595, HIGH);
 }
 
 
@@ -116,6 +116,7 @@ void loop() {
 
 	if (digitalRead(button) == PRESSED) {
 		start_SAR = true;
+		send_data_to_bits(convert_to_bit(0));
 	}
 
 	// start conversion
@@ -123,123 +124,64 @@ void loop() {
 		start_SAR = false;
 
 		// sample Vin
-		digitalWrite(sh, HIGH);
-		delay(5);
-		digitalWrite(sh, LOW);
+		digitalWrite(sh_enable, HIGH);
+		delay(500);
+		digitalWrite(sh_enable, LOW);
 
+		final_countdown =0;
 
-		// 1000
-		// test value
-		// final value
-		
-		// 1000
-		// 1100
-		// 1110
-		// 1101
-
-		uint8_t final_countdown =0;
-
-
-		final_countdown = 0x0; // 1000
-
-		bitWrite(final_countdown, 3, 1); // 1100
-		send_data_to_bits(convert_to_bit(final_countdown);
+		Serial.print("3: "), Serial.print(final_countdown);
+		bitWrite(final_countdown, 3, 1); // 1000
+		send_data_to_bits(convert_to_bit(final_countdown));
+		delay(500);
 		comparator_value = digitalRead(comparator_result);
+		Serial.print(", cv="); Serial.print(comparator_value);
 		if (comparator_value==0)
 			bitWrite(final_countdown, 3, 0);
-
+		Serial.print(","); Serial.println(final_countdown);
+	
+		Serial.print("2: "), Serial.print(final_countdown);
 		bitWrite(final_countdown, 2, 1); // 1100
-		send_data_to_bits(convert_to_bit(final_countdown);
+		send_data_to_bits(convert_to_bit(final_countdown));
+		delay(500);
 		comparator_value = digitalRead(comparator_result);
+		Serial.print(", cv="); Serial.print(comparator_value);
 		if (comparator_value==0)
 			bitWrite(final_countdown, 2, 0);
-
+		Serial.print(","); Serial.println(final_countdown);
+	
+		Serial.print("1: "), Serial.print(final_countdown);
 		bitWrite(final_countdown, 1, 1); // 1110
-		send_data_to_bits(convert_to_bit(final_countdown);
+		send_data_to_bits(convert_to_bit(final_countdown));
+		delay(500);
 		comparator_value = digitalRead(comparator_result);
-		if (comparator_value==0)
-			bitWrite(final_countdown, 1, 0);
+		Serial.print(", cv="); Serial.print(comparator_value);
 
-		bitWrite(final_countdown, 0, 1); // 1110
-		send_data_to_bits(convert_to_bit(final_countdown);
+		if (comparator_value==0)
+			bitWrite(final_countdown, 1, 0);  // 1100
+		Serial.print(","); Serial.println(final_countdown);
+		
+		Serial.print("0: "), Serial.print(final_countdown);
+		bitWrite(final_countdown, 0, 1); // 1111  -- 1101
+		send_data_to_bits(convert_to_bit(final_countdown));
+		delay(500);
 		comparator_value = digitalRead(comparator_result);
+		Serial.print(", cv="); Serial.print(comparator_value);
 		if (comparator_value==0)
 			bitWrite(final_countdown, 0, 0);
+		Serial.print(","); Serial.println(final_countdown);
+		
+		send_data_to_bits(convert_to_bit(final_countdown));
+		Serial.print("Conversion: "); Serial.println(final_countdown);
 
-
-
-
-
-		for(int x=2; x>=0; x--) {
-			if (comparator_value) {
-				bitWrite(output_value, x, 1);
-			}
-			send_data_to_bits(convert_to_bit(final_countdown);
-			comparator_value = digitalRead(comparator_result);
-
-			// output_value += comparator_value << x;
-			output_value = 
-			bitWrite(final_countdown, x, comparator_value); 
-			send_data_to_bits(convert_to_bit(final_countdown);
-			comparator_value = digitalRead(comparator_result);
-		}
-
-		while(!done) {
-
-		}
-		comparator_value = digitalRead(comparator_result);
-
-
-
-
-
-		int final_countdown = 0x8;
-
-		if (comparator_value == 1) {
-			// go up
-			for(int x=0; x < 2; x++) {
-				send_data_to_bits(convert_to_bit(up_pattern[x]));
-				delay(10);
-				comparator_value = digitalRead(comparator_result);
-				if (comparator_value)
-					final_countdown = up_pattern[x];
-			} 
-			// send final value
-			send_data_to_bits(convert_to_bit(final_countdown-1));
-			comparator_value = digitalRead(comparator_result);
-			if (comparator_value==0)
-				final_countdown = final_countdown-1;
-		} else {
-			// go down
-
-		}
-
-
-
-		if (comparator_value == 1) {
-			send_data_to_bits(convert_to_bit(12));
-			comparator_value = digitalRead(comparator_result);
-			if (comparator_value == 1) {
-				send_data_to_bits(convert_to_bit(14));
-				comparator_value = digitalRead(comparator_result);
-				if (comparator_value == 1) {
-					send_data_to_bits(convert_to_bit(14));
-					comparator_value = digitalRead(comparator_result);
-				}
-				if (comparator_value == 1) {
-					send_data_to_bits(convert_to_bit(14));
-					comparator_value = digitalRead(comparator_result);
-				}
-			}
-		}
 	}
 
 	unsigned long current_millis = millis();
 
 	// print status of comparator
 	if (current_millis - previous_print_millis >= print_interval) {
-		Serial.print("Comparator: ");
-		Serial.println(digitalRead(comparator_result));	
+		//Serial.print("Comparator: ");
+		//Serial.println(digitalRead(comparator_result));	
 
 		previous_print_millis = current_millis;
 	}

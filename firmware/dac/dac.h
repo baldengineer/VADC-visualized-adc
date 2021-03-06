@@ -17,7 +17,8 @@ const byte sh_enable = 8;
 const byte comparator_result = 7;
 
 // SAR variables
-const bool start_SAR = false;
+bool start_SAR = false;
+uint8_t final_countdown =0;
 
 // Test Pattern variables
 int wait = 2500;
