@@ -11,3 +11,19 @@
 const byte clock_595 = 2;
 const byte latch_595 = 3;
 const byte data_595 = 4;
+
+// Front-End Variables
+const byte sh_enable = 8;
+const byte comparator_result = 7;
+
+// SAR variables
+const bool start_SAR = false;
+
+// Test Pattern variables
+int wait = 2500;
+byte counter = 0x0;
+const byte button = 6;
+
+#define PRESSED LOW
+#define NOT_PRESSED HIGH
+

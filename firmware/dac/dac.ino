@@ -38,30 +38,6 @@ void send_data_to_bits(uint32_t data_out) {
 }
 
 
-
-void setup() {
-	Serial.begin(9600);
-	Serial.println(F("Visualized ADC - DAC"));
-	init_555();
-}
-
-int wait = 150;
-byte counter = 0x0;
-
-void loop() {
-	uint32_t data_out = convert_to_bit(counter);
-	send_data_to_bits(data_out);
-	delay(wait);
-	counter++;
-	if (counter > 15)
-		counter=0; 
-//	send_data_to_bits(convert_to_bit(0));
-//	delay(2000);
-//	send_data_to_bits(convert_to_bit(15));
-//	delay(2000);
-	
-}
-
 uint32_t convert_to_bit(byte counter) {
 	uint32_t data_out = 0x0;
 	
@@ -116,4 +92,206 @@ uint32_t convert_to_bit(byte counter) {
 	      break;  
 	  }
 	return data_out;
+}
+
+
+void setup() {
+	Serial.begin(9600);
+	Serial.println(F("Visualized ADC - DAC"));
+	init_555();
+
+	pinMode(sh_enable, OUTPUT);
+	digitalWrite(sh_enable, LOW);
+	pinMode(comparator_result, INPUT);
+
+	pinMode(button, INPUT_PULLUP);
+}
+
+unsigned long previous_print_millis = 0;
+unsigned long print_interval = 1000;
+
+int comparator_value = 0;
+
+void loop() {
+
+	if (digitalRead(button) == PRESSED) {
+		start_SAR = true;
+	}
+
+	// start conversion
+	if (start_SAR) {
+		start_SAR = false;
+
+		// sample Vin
+		digitalWrite(sh, HIGH);
+		delay(5);
+		digitalWrite(sh, LOW);
+
+
+		// 1000
+		// test value
+		// final value
+		
+		// 1000
+		// 1100
+		// 1110
+		// 1101
+
+		uint8_t final_countdown =0;
+
+
+		final_countdown = 0x0; // 1000
+
+		bitWrite(final_countdown, 3, 1); // 1100
+		send_data_to_bits(convert_to_bit(final_countdown);
+		comparator_value = digitalRead(comparator_result);
+		if (comparator_value==0)
+			bitWrite(final_countdown, 3, 0);
+
+		bitWrite(final_countdown, 2, 1); // 1100
+		send_data_to_bits(convert_to_bit(final_countdown);
+		comparator_value = digitalRead(comparator_result);
+		if (comparator_value==0)
+			bitWrite(final_countdown, 2, 0);
+
+		bitWrite(final_countdown, 1, 1); // 1110
+		send_data_to_bits(convert_to_bit(final_countdown);
+		comparator_value = digitalRead(comparator_result);
+		if (comparator_value==0)
+			bitWrite(final_countdown, 1, 0);
+
+		bitWrite(final_countdown, 0, 1); // 1110
+		send_data_to_bits(convert_to_bit(final_countdown);
+		comparator_value = digitalRead(comparator_result);
+		if (comparator_value==0)
+			bitWrite(final_countdown, 0, 0);
+
+
+
+
+
+		for(int x=2; x>=0; x--) {
+			if (comparator_value) {
+				bitWrite(output_value, x, 1);
+			}
+			send_data_to_bits(convert_to_bit(final_countdown);
+			comparator_value = digitalRead(comparator_result);
+
+			// output_value += comparator_value << x;
+			output_value = 
+			bitWrite(final_countdown, x, comparator_value); 
+			send_data_to_bits(convert_to_bit(final_countdown);
+			comparator_value = digitalRead(comparator_result);
+		}
+
+		while(!done) {
+
+		}
+		comparator_value = digitalRead(comparator_result);
+
+
+
+
+
+		int final_countdown = 0x8;
+
+		if (comparator_value == 1) {
+			// go up
+			for(int x=0; x < 2; x++) {
+				send_data_to_bits(convert_to_bit(up_pattern[x]));
+				delay(10);
+				comparator_value = digitalRead(comparator_result);
+				if (comparator_value)
+					final_countdown = up_pattern[x];
+			} 
+			// send final value
+			send_data_to_bits(convert_to_bit(final_countdown-1));
+			comparator_value = digitalRead(comparator_result);
+			if (comparator_value==0)
+				final_countdown = final_countdown-1;
+		} else {
+			// go down
+
+		}
+
+
+
+		if (comparator_value == 1) {
+			send_data_to_bits(convert_to_bit(12));
+			comparator_value = digitalRead(comparator_result);
+			if (comparator_value == 1) {
+				send_data_to_bits(convert_to_bit(14));
+				comparator_value = digitalRead(comparator_result);
+				if (comparator_value == 1) {
+					send_data_to_bits(convert_to_bit(14));
+					comparator_value = digitalRead(comparator_result);
+				}
+				if (comparator_value == 1) {
+					send_data_to_bits(convert_to_bit(14));
+					comparator_value = digitalRead(comparator_result);
+				}
+			}
+		}
+	}
+
+	unsigned long current_millis = millis();
+
+	// print status of comparator
+	if (current_millis - previous_print_millis >= print_interval) {
+		Serial.print("Comparator: ");
+		Serial.println(digitalRead(comparator_result));	
+
+		previous_print_millis = current_millis;
+	}
+
+	
+
+	// determine direction
+	// loop until comparator flips or run out of bits
+
+	// *** when IN < DAC
+	// set DAC to 1.25 V
+
+    // *** 
+
+
+    // 4-bit DAC
+    // 0x0 to 0xF
+    //     0x7
+    //     0x8
+
+
+	if (Serial.available()) {
+		if (Serial.peek() != '!') {
+			int dac_value = Serial.parseInt();
+
+			if (dac_value < 0)
+				dac_value = 0;
+			if (dac_value > 0xF)
+				dac_value = 0xF;
+			Serial.print("Got: "); Serial.println(dac_value);
+
+			send_data_to_bits(convert_to_bit(dac_value));	
+
+		} else {
+			Serial.read();
+			digitalWrite(sh_enable, HIGH);
+			delay(5);
+			digitalWrite(sh_enable, LOW);
+			Serial.println("Sampled");
+		}
+
+	}
+
+/*	uint32_t data_out = convert_to_bit(counter);
+	send_data_to_bits(data_out);
+	delay(wait);
+	counter++;
+	if (counter > 15)
+		counter=0; */
+//	send_data_to_bits(convert_to_bit(0));
+//	delay(2000);
+//	send_data_to_bits(convert_to_bit(15));
+//	delay(2000);
+	
 }
