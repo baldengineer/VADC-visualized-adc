@@ -45,24 +45,22 @@ void setup() {
 	init_555();
 }
 
-int wait = 100;
+int wait = 150;
 byte counter = 0x0;
 
 void loop() {
-/*	uint32_t data_out = convert_to_bit(counter);
+	uint32_t data_out = convert_to_bit(counter);
 	send_data_to_bits(data_out);
 	delay(wait);
 	counter++;
 	if (counter > 15)
-		counter=0; */
-	send_data_to_bits(convert_to_bit(0));
-	delay(2000);
-	send_data_to_bits(convert_to_bit(15));
-	delay(2000);
+		counter=0; 
+//	send_data_to_bits(convert_to_bit(0));
+//	delay(2000);
+//	send_data_to_bits(convert_to_bit(15));
+//	delay(2000);
 	
 }
-
-
 
 uint32_t convert_to_bit(byte counter) {
 	uint32_t data_out = 0x0;

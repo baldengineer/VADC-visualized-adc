@@ -938,4 +938,15 @@ Text Notes 2650 6200 0    50   ~ 0
 HC or HCT can be used for either chip.
 Text Notes 6500 7100 0    50   ~ 0
 Mounting Holes
+$Comp
+L power:GND #PWR?
+U 1 1 60422000
+P 5600 1750
+F 0 "#PWR?" H 5600 1500 50  0001 C CNN
+F 1 "GND" H 5605 1577 50  0000 C CNN
+F 2 "" H 5600 1750 50  0001 C CNN
+F 3 "" H 5600 1750 50  0001 C CNN
+	1    5600 1750
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
