@@ -129,50 +129,19 @@ void loop() {
 		digitalWrite(sh_enable, LOW);
 
 		final_countdown =0;
-
-		Serial.print("3: "), Serial.print(final_countdown);
-		bitWrite(final_countdown, 3, 1); // 1000
-		send_data_to_bits(convert_to_bit(final_countdown));
-		delay(500);
-		comparator_value = digitalRead(comparator_result);
-		Serial.print(", cv="); Serial.print(comparator_value);
-		if (comparator_value==0)
-			bitWrite(final_countdown, 3, 0);
-		Serial.print(","); Serial.println(final_countdown);
+		for (int x=(dac_width-1); x>=0; x--) {
+			bitWrite(final_countdown, x, 1);
+			send_data_to_bits(convert_to_bit(final_countdown));
+			delay(500);
+			bitWrite(final_countdown, x, digitalRead(comparator_result));
+		}
 	
-		Serial.print("2: "), Serial.print(final_countdown);
-		bitWrite(final_countdown, 2, 1); // 1100
+		// send final value	
 		send_data_to_bits(convert_to_bit(final_countdown));
-		delay(500);
-		comparator_value = digitalRead(comparator_result);
-		Serial.print(", cv="); Serial.print(comparator_value);
-		if (comparator_value==0)
-			bitWrite(final_countdown, 2, 0);
-		Serial.print(","); Serial.println(final_countdown);
-	
-		Serial.print("1: "), Serial.print(final_countdown);
-		bitWrite(final_countdown, 1, 1); // 1110
-		send_data_to_bits(convert_to_bit(final_countdown));
-		delay(500);
-		comparator_value = digitalRead(comparator_result);
-		Serial.print(", cv="); Serial.print(comparator_value);
-
-		if (comparator_value==0)
-			bitWrite(final_countdown, 1, 0);  // 1100
-		Serial.print(","); Serial.println(final_countdown);
-		
-		Serial.print("0: "), Serial.print(final_countdown);
-		bitWrite(final_countdown, 0, 1); // 1111  -- 1101
-		send_data_to_bits(convert_to_bit(final_countdown));
-		delay(500);
-		comparator_value = digitalRead(comparator_result);
-		Serial.print(", cv="); Serial.print(comparator_value);
-		if (comparator_value==0)
-			bitWrite(final_countdown, 0, 0);
-		Serial.print(","); Serial.println(final_countdown);
-		
-		send_data_to_bits(convert_to_bit(final_countdown));
-		Serial.print("Conversion: "); Serial.println(final_countdown);
+		Serial.print("Conversion: "); Serial.print(final_countdown);
+		Serial.print(",");
+		Serial.print(final_countdown * 0.3);
+		Serial.println("V");
 
 	}
 
@@ -185,22 +154,6 @@ void loop() {
 
 		previous_print_millis = current_millis;
 	}
-
-	
-
-	// determine direction
-	// loop until comparator flips or run out of bits
-
-	// *** when IN < DAC
-	// set DAC to 1.25 V
-
-    // *** 
-
-
-    // 4-bit DAC
-    // 0x0 to 0xF
-    //     0x7
-    //     0x8
 
 
 	if (Serial.available()) {

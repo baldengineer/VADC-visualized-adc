@@ -19,6 +19,8 @@ const byte comparator_result = 7;
 // SAR variables
 bool start_SAR = false;
 uint8_t final_countdown =0;
+const byte dac_width = 4;
+
 
 // Test Pattern variables
 int wait = 2500;
