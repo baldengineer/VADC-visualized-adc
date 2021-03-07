@@ -1,7 +1,7 @@
 
 #include "dac.h"
 
-void init_555() {
+void init_595() {
 	pinMode(clock_595, OUTPUT);
 	pinMode(latch_595, OUTPUT);
 	pinMode(data_595, OUTPUT);
@@ -98,7 +98,10 @@ uint32_t convert_to_bit(byte counter) {
 void setup() {
 	Serial.begin(9600);
 	Serial.println(F("Visualized ADC - DAC"));
-	init_555();
+	init_595();
+	init_tft();
+	//tft_print_twolines("1.21v", ST77XX_RED, "5.43v", ST77XX_GREEN);
+  tft_print_oneline("1.21v", ST77XX_RED);
 
 	pinMode(sh_enable, OUTPUT);
 	digitalWrite(sh_enable, LOW);
@@ -121,7 +124,11 @@ void loop() {
 
 	// start conversion
 	if (start_SAR) {
+    double adc_voltage_step = adc_vref / ((pow(2,dac_width)-1.0));
 		start_SAR = false;
+    Serial.println(F("---\nConversion Start:"));
+    Serial.print(F("vref = ")); Serial.println(adc_vref);
+    Serial.print(F("adc_voltage_step = ")); Serial.println(adc_voltage_step);
 
 		// sample Vin
 		digitalWrite(sh_enable, HIGH);
@@ -129,9 +136,17 @@ void loop() {
 		digitalWrite(sh_enable, LOW);
 
 		final_countdown =0;
+    char str_val[8]; // = "00.00v\0";
 		for (int x=(dac_width-1); x>=0; x--) {
 			bitWrite(final_countdown, x, 1);
 			send_data_to_bits(convert_to_bit(final_countdown));
+      delay(10);
+      int current_dac_value = (analogRead(A5));
+      double current_dac_voltage = current_dac_value * (5.0/(pow(2,10)-1));
+      Serial.print("current_dac_value = "); Serial.print(current_dac_value);
+      Serial.print(" ("); Serial.print(current_dac_voltage); Serial.println(" volts)");
+      dtostrf(current_dac_voltage, 5, 2, str_val);
+      tft_print_oneline(str_val, ST77XX_RED);
 			delay(500);
 			bitWrite(final_countdown, x, digitalRead(comparator_result));
 		}

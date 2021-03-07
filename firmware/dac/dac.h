@@ -1,6 +1,15 @@
 
 #include <Arduino.h>
 
+// for the TFT
+#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
+#include <SPI.h>
+//#include <Fonts/FreeMonoBoldOblique12pt7b.h>
+//#include <Fonts/FreeSansBold24pt7b.h>	
+#include <Fonts/FreeSansBold18pt7b.h>
+#include <String.h>
+
 #define RELAY_ON false
 #define RELAY_OFF true
 
@@ -20,6 +29,7 @@ const byte comparator_result = 7;
 bool start_SAR = false;
 uint8_t final_countdown =0;
 const byte dac_width = 4;
+double adc_vref = 5.0;
 
 
 // Test Pattern variables
