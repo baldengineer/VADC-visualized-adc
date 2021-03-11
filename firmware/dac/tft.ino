@@ -3,8 +3,8 @@
 // 0.96" RGB TFT 160x80 module
 #define TFT_CS         10
 #define TFT_RST         9 // Or set to -1 and connect to Arduino RESET pin
-#define TFT_DC         A1
-#define TFT_BACKLIGHT  A0
+#define TFT_DC         A0
+//#define TFT_BACKLIGHT  A1
 
 // ST7735 use:
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);

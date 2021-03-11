@@ -36,6 +36,8 @@ double adc_vref = 5.0;
 int wait = 2500;
 byte counter = 0x0;
 const byte button = 6;
+const byte dac_value_button =  A3;
+const byte step_button = A4;
 
 #define PRESSED LOW
 #define NOT_PRESSED HIGH

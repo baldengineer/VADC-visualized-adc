@@ -94,6 +94,53 @@ uint32_t convert_to_bit(byte counter) {
 	return data_out;
 }
 
+void print_dac_value() {
+  char str_val[8]; // = "00.00v\0";
+  int current_dac_value = (analogRead(A5));
+  double current_dac_voltage = current_dac_value * (5.0/(pow(2,10)-1));
+  Serial.print("current_dac_value = "); Serial.print(current_dac_value);
+  Serial.print(" ("); Serial.print(current_dac_voltage); Serial.println(" volts)");
+  dtostrf(current_dac_voltage, 5, 2, str_val);
+  tft_print_oneline(str_val, ST77XX_RED);
+}
+
+void step_through_dac() {
+  	// start conversion
+    double adc_voltage_step = adc_vref / ((pow(2,dac_width)-1.0));
+		//start_SAR = false;
+   /* Serial.println(F("---\nConversion Start:"));
+    Serial.print(F("vref = ")); Serial.println(adc_vref);
+    Serial.print(F("adc_voltage_step = ")); Serial.println(adc_voltage_step);*/
+
+		// sample Vin
+		digitalWrite(sh_enable, HIGH);
+		delay(500);
+		digitalWrite(sh_enable, LOW);
+
+		final_countdown =0;
+		for (int x=(dac_width-1); x>=0; x--) {
+			bitWrite(final_countdown, x, 1);
+			send_data_to_bits(convert_to_bit(final_countdown));
+      while(digitalRead(step_button) == NOT_PRESSED);
+      delay(10);
+
+      // just for our display, not used elsewhere
+      print_dac_value();
+
+			delay(500);
+			bitWrite(final_countdown, x, digitalRead(comparator_result));
+		}
+	
+		// send final value	
+    while(digitalRead(step_button) == NOT_PRESSED);
+		send_data_to_bits(convert_to_bit(final_countdown));
+    delay(10);
+    print_dac_value();
+	/*	Serial.print(F("Conversion: ")); Serial.print(final_countdown);
+		Serial.print(F(","));
+		Serial.print(final_countdown * 0.3);
+		Serial.println(F("V"));*/
+}
 
 void setup() {
 	Serial.begin(9600);
@@ -107,6 +154,8 @@ void setup() {
 	digitalWrite(sh_enable, LOW);
 	pinMode(comparator_result, INPUT);
 
+  pinMode(step_button, INPUT_PULLUP);
+	pinMode(dac_value_button, INPUT_PULLUP);
 	pinMode(button, INPUT_PULLUP);
 }
 
@@ -116,6 +165,13 @@ unsigned long print_interval = 1000;
 int comparator_value = 0;
 
 void loop() {
+  if (digitalRead(dac_value_button) == PRESSED) {
+    print_dac_value();
+  }
+
+  if (digitalRead(step_button) == PRESSED) {
+    step_through_dac();
+  }
 
 	if (digitalRead(button) == PRESSED) {
 		start_SAR = true;
@@ -136,27 +192,26 @@ void loop() {
 		digitalWrite(sh_enable, LOW);
 
 		final_countdown =0;
-    char str_val[8]; // = "00.00v\0";
 		for (int x=(dac_width-1); x>=0; x--) {
 			bitWrite(final_countdown, x, 1);
 			send_data_to_bits(convert_to_bit(final_countdown));
       delay(10);
-      int current_dac_value = (analogRead(A5));
-      double current_dac_voltage = current_dac_value * (5.0/(pow(2,10)-1));
-      Serial.print("current_dac_value = "); Serial.print(current_dac_value);
-      Serial.print(" ("); Serial.print(current_dac_voltage); Serial.println(" volts)");
-      dtostrf(current_dac_voltage, 5, 2, str_val);
-      tft_print_oneline(str_val, ST77XX_RED);
+
+      // just for our display, not used elsewhere
+      print_dac_value();
+
 			delay(500);
 			bitWrite(final_countdown, x, digitalRead(comparator_result));
 		}
 	
 		// send final value	
 		send_data_to_bits(convert_to_bit(final_countdown));
-		Serial.print("Conversion: "); Serial.print(final_countdown);
-		Serial.print(",");
+    delay(10);
+    print_dac_value();
+		Serial.print(F("Conversion: ")); Serial.print(final_countdown);
+		Serial.print(F(","));
 		Serial.print(final_countdown * 0.3);
-		Serial.println("V");
+		Serial.println(F("V"));
 
 	}
 
