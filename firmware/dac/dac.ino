@@ -1,5 +1,27 @@
-
 #include "dac.h"
+#include "tft.h"
+
+void handle_serial() {
+  if (Serial.available()) {
+    if (Serial.peek() != '!') {
+      int dac_value = Serial.parseInt();
+
+      if (dac_value < 0)
+        dac_value = 0;
+      if (dac_value > 0xF)
+        dac_value = 0xF;
+      Serial.print("Got: "); Serial.println(dac_value);
+
+      send_data_to_bits(convert_to_bit(dac_value));	
+    } else {
+      Serial.read();
+      digitalWrite(sh_enable, HIGH);
+      delay(5);
+      digitalWrite(sh_enable, LOW);
+      Serial.println("Sampled");
+    }
+  }	
+}
 
 void init_595() {
 	pinMode(clock_595, OUTPUT);
@@ -35,8 +57,18 @@ void send_data_to_bits(uint32_t data_out) {
 	 shiftOut(data_595, clock_595, MSBFIRST, (data_out >> 8));	// bit 2
 	 shiftOut(data_595, clock_595, MSBFIRST, (data_out));		// bit 0
 	digitalWrite(latch_595, HIGH);
+
+  // give the relays time to settle
+  delay(10);
 }
 
+void print_dac_value(uint16_t color) {
+  char str_val[8] = {"0.00v"}; // = "00.00v";
+  double current_dac_voltage = analogRead(A5) * (5.0/(pow(2,10)-1.0));
+  Serial.print("current_dac_voltage = "); Serial.print(current_dac_voltage); Serial.println(" volts)");
+  dtostrf(current_dac_voltage, 5, 2, str_val);
+  tft_print_oneline(str_val, color);
+}
 
 uint32_t convert_to_bit(byte counter) {
 	uint32_t data_out = 0x0;
@@ -94,52 +126,10 @@ uint32_t convert_to_bit(byte counter) {
 	return data_out;
 }
 
-void print_dac_value() {
-  char str_val[8]; // = "00.00v\0";
-  int current_dac_value = (analogRead(A5));
-  double current_dac_voltage = current_dac_value * (5.0/(pow(2,10)-1));
-  Serial.print("current_dac_value = "); Serial.print(current_dac_value);
-  Serial.print(" ("); Serial.print(current_dac_voltage); Serial.println(" volts)");
-  dtostrf(current_dac_voltage, 5, 2, str_val);
-  tft_print_oneline(str_val, ST77XX_RED);
-}
-
-void step_through_dac() {
-  	// start conversion
-    double adc_voltage_step = adc_vref / ((pow(2,dac_width)-1.0));
-		//start_SAR = false;
-   /* Serial.println(F("---\nConversion Start:"));
-    Serial.print(F("vref = ")); Serial.println(adc_vref);
-    Serial.print(F("adc_voltage_step = ")); Serial.println(adc_voltage_step);*/
-
-		// sample Vin
-		digitalWrite(sh_enable, HIGH);
-		delay(500);
-		digitalWrite(sh_enable, LOW);
-
-		final_countdown =0;
-		for (int x=(dac_width-1); x>=0; x--) {
-			bitWrite(final_countdown, x, 1);
-			send_data_to_bits(convert_to_bit(final_countdown));
-      while(digitalRead(step_button) == NOT_PRESSED);
-      delay(10);
-
-      // just for our display, not used elsewhere
-      print_dac_value();
-
-			delay(500);
-			bitWrite(final_countdown, x, digitalRead(comparator_result));
-		}
-	
-		// send final value	
-    while(digitalRead(step_button) == NOT_PRESSED);
-		send_data_to_bits(convert_to_bit(final_countdown));
-    delay(10);
-    print_dac_value();
-	/*	Serial.print(F("Conversion: ")); Serial.print(final_countdown);
-		Serial.print(F(","));
-		Serial.print(final_countdown * 0.3);
-		Serial.println(F("V"));*/
+void sample_vin() {
+  digitalWrite(sh_enable, HIGH);
+  delay(500);
+  digitalWrite(sh_enable, LOW);
 }
 
 void setup() {
@@ -147,8 +137,6 @@ void setup() {
 	Serial.println(F("Visualized ADC - DAC"));
 	init_595();
 	init_tft();
-	//tft_print_twolines("1.21v", ST77XX_RED, "5.43v", ST77XX_GREEN);
-  tft_print_oneline("1.21v", ST77XX_RED);
 
 	pinMode(sh_enable, OUTPUT);
 	digitalWrite(sh_enable, LOW);
@@ -157,106 +145,68 @@ void setup() {
   pinMode(step_button, INPUT_PULLUP);
 	pinMode(dac_value_button, INPUT_PULLUP);
 	pinMode(button, INPUT_PULLUP);
+
+  //tft_print_twolines("1.21v", LCD_BLUE, "5.43v", LCD_GREEN);
+  char msg[6] = {"Ready"};
+  tft_print_oneline(msg, LCD_BLUE);
 }
 
-unsigned long previous_print_millis = 0;
-unsigned long print_interval = 1000;
-
-int comparator_value = 0;
-
 void loop() {
-  if (digitalRead(dac_value_button) == PRESSED) {
-    print_dac_value();
-  }
+  unsigned long current_millis = millis();
 
+  handle_serial();
+
+  // Print current DAC value (mostly for testing)
+  if (digitalRead(dac_value_button) == PRESSED)
+    print_dac_value(LCD_GREEN);
+
+  // manual stepper mode, go one step at a time.
   if (digitalRead(step_button) == PRESSED) {
-    step_through_dac();
+   stepper = true;
+   start_SAR = true;
   }
 
+  // kick-off the conversion
 	if (digitalRead(button) == PRESSED) {
 		start_SAR = true;
-		send_data_to_bits(convert_to_bit(0));
+		send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
+    print_dac_value(LCD_BLUE);
 	}
 
 	// start conversion
 	if (start_SAR) {
-    double adc_voltage_step = adc_vref / ((pow(2,dac_width)-1.0));
 		start_SAR = false;
     Serial.println(F("---\nConversion Start:"));
     Serial.print(F("vref = ")); Serial.println(adc_vref);
     Serial.print(F("adc_voltage_step = ")); Serial.println(adc_voltage_step);
 
 		// sample Vin
-		digitalWrite(sh_enable, HIGH);
-		delay(500);
-		digitalWrite(sh_enable, LOW);
+    sample_vin();
 
 		final_countdown =0;
+    // test one bit at a time, going from MSB to LSB
 		for (int x=(dac_width-1); x>=0; x--) {
 			bitWrite(final_countdown, x, 1);
 			send_data_to_bits(convert_to_bit(final_countdown));
       delay(10);
-
+      print_dac_value(LCD_BLUE); // red is actually blue
+      if (stepper) while(digitalRead(step_button) == NOT_PRESSED);
+    
       // just for our display, not used elsewhere
-      print_dac_value();
-
-			delay(500);
+			if (!stepper) delay(500);
 			bitWrite(final_countdown, x, digitalRead(comparator_result));
+      print_dac_value(LCD_BLUE);
 		}
 	
 		// send final value	
+    if (stepper) while(digitalRead(step_button) == NOT_PRESSED);
 		send_data_to_bits(convert_to_bit(final_countdown));
     delay(10);
-    print_dac_value();
+    print_dac_value(LCD_RED);
 		Serial.print(F("Conversion: ")); Serial.print(final_countdown);
 		Serial.print(F(","));
 		Serial.print(final_countdown * 0.3);
 		Serial.println(F("V"));
-
+    stepper = false;
 	}
-
-	unsigned long current_millis = millis();
-
-	// print status of comparator
-	if (current_millis - previous_print_millis >= print_interval) {
-		//Serial.print("Comparator: ");
-		//Serial.println(digitalRead(comparator_result));	
-
-		previous_print_millis = current_millis;
-	}
-
-
-	if (Serial.available()) {
-		if (Serial.peek() != '!') {
-			int dac_value = Serial.parseInt();
-
-			if (dac_value < 0)
-				dac_value = 0;
-			if (dac_value > 0xF)
-				dac_value = 0xF;
-			Serial.print("Got: "); Serial.println(dac_value);
-
-			send_data_to_bits(convert_to_bit(dac_value));	
-
-		} else {
-			Serial.read();
-			digitalWrite(sh_enable, HIGH);
-			delay(5);
-			digitalWrite(sh_enable, LOW);
-			Serial.println("Sampled");
-		}
-
-	}
-
-/*	uint32_t data_out = convert_to_bit(counter);
-	send_data_to_bits(data_out);
-	delay(wait);
-	counter++;
-	if (counter > 15)
-		counter=0; */
-//	send_data_to_bits(convert_to_bit(0));
-//	delay(2000);
-//	send_data_to_bits(convert_to_bit(15));
-//	delay(2000);
-	
 }

@@ -1,17 +1,3 @@
-
-
-// 0.96" RGB TFT 160x80 module
-#define TFT_CS         10
-#define TFT_RST         9 // Or set to -1 and connect to Arduino RESET pin
-#define TFT_DC         A0
-//#define TFT_BACKLIGHT  A1
-
-// ST7735 use:
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-
-// Example of using canvas, if we're going to use that
-GFXcanvas1 canvas(160, 80); // 160x80 pixel canvas
-
 // Adafruit's example text draw, may not use
 void testdrawtext(char *text, uint16_t color) {
   int16_t  x1, y1;
@@ -38,7 +24,6 @@ void tft_print_oneline(char *line1, uint16_t color1) {
   tft.print(line1); // 0,0 is bottom left
 
 }
-
 
 void tft_print_twolines(char *line1, uint16_t color1, char *line2, uint16_t color2) {
   // for text bounding box

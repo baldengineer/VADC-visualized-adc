@@ -30,7 +30,11 @@ bool start_SAR = false;
 uint8_t final_countdown =0;
 const byte dac_width = 4;
 double adc_vref = 5.0;
+double adc_voltage_step = adc_vref / ((pow(2,dac_width)-1.0));
+int comparator_value = 0;
 
+unsigned long previous_print_millis = 0;
+unsigned long print_interval = 1000;
 
 // Test Pattern variables
 int wait = 2500;
@@ -38,6 +42,9 @@ byte counter = 0x0;
 const byte button = 6;
 const byte dac_value_button =  A3;
 const byte step_button = A4;
+
+bool stepper = false;
+
 
 #define PRESSED LOW
 #define NOT_PRESSED HIGH
