@@ -62,9 +62,13 @@ void send_data_to_bits(uint32_t data_out) {
   delay(10);
 }
 
+double measure_dac_value() {
+  return analogRead(A5) * (5.0/(pow(2,10)-1.0));
+}
+
 void print_dac_value(uint16_t color) {
   char str_val[8] = {"0.00v"}; // = "00.00v";
-  double current_dac_voltage = analogRead(A5) * (5.0/(pow(2,10)-1.0));
+  double current_dac_voltage = measure_dac_value();
   Serial.print("current_dac_voltage = "); Serial.print(current_dac_voltage); Serial.println(" volts)");
   dtostrf(current_dac_voltage, 5, 2, str_val);
   tft_print_oneline(str_val, color);
@@ -132,11 +136,54 @@ void sample_vin() {
   digitalWrite(sh_enable, LOW);
 }
 
+void dac_cal() {
+  int cal_delay = 100;
+  // clear the relays
+  char msg[6] = {"Cal"};
+  tft_print_oneline(msg, LCD_RED);
+  send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
+  delay(cal_delay);
+  
+  // set 0, measure the voltage
+  send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
+  delay(cal_delay);
+  dac_value_min = measure_dac_value();
+
+  // set 1, measure the voltage
+  send_data_to_bits(convert_to_bit(1)); // clear, good for scope view
+  delay(cal_delay);
+  dac_value_step = measure_dac_value();
+
+  // set 15, measure the voltage
+  send_data_to_bits(convert_to_bit(15)); // clear, good for scope view
+  delay(cal_delay);
+  dac_value_max = measure_dac_value();
+
+  // set 8, measure the voltage
+   send_data_to_bits(convert_to_bit(8)); // clear, good for scope view
+  delay(cal_delay);
+  double dac_value_verify = measure_dac_value();
+
+  char step_str[8];
+  dtostrf(dac_value_step, 5, 2, step_str);
+  char verify_str[8];
+  dtostrf((dac_value_verify/8.0), 5, 2, verify_str);
+
+  tft_print_twolines(step_str, LCD_BLUE, verify_str, LCD_GREEN);
+
+  // verify that it is 10% of expected
+  //delay(1000);
+
+}
+
 void setup() {
 	Serial.begin(9600);
 	Serial.println(F("Visualized ADC - DAC"));
 	init_595();
 	init_tft();
+
+  analogReference(EXTERNAL);
+  analogRead(A0);
 
 	pinMode(sh_enable, OUTPUT);
 	digitalWrite(sh_enable, LOW);
@@ -147,6 +194,8 @@ void setup() {
 	pinMode(button, INPUT_PULLUP);
 
   //tft_print_twolines("1.21v", LCD_BLUE, "5.43v", LCD_GREEN);
+  dac_cal();
+  while (digitalRead(button) == NOT_PRESSED);
   char msg[6] = {"Ready"};
   tft_print_oneline(msg, LCD_BLUE);
 }
@@ -169,12 +218,12 @@ void loop() {
   // kick-off the conversion
 	if (digitalRead(button) == PRESSED) {
 		start_SAR = true;
-		send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
-    print_dac_value(LCD_BLUE);
 	}
 
 	// start conversion
 	if (start_SAR) {
+    send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
+    print_dac_value(LCD_BLUE);
 		start_SAR = false;
     Serial.println(F("---\nConversion Start:"));
     Serial.print(F("vref = ")); Serial.println(adc_vref);
@@ -202,7 +251,16 @@ void loop() {
     if (stepper) while(digitalRead(step_button) == NOT_PRESSED);
 		send_data_to_bits(convert_to_bit(final_countdown));
     delay(10);
-    print_dac_value(LCD_RED);
+
+    char low_value[8];
+    char high_value[8];
+
+    dtostrf((dac_value_step * final_countdown),  5, 2, low_value);
+    dtostrf(((dac_value_step * final_countdown) + dac_value_step), 5, 2, high_value );
+
+   // print_dac_value(LCD_RED);
+    tft_print_twolines(low_value, LCD_GREEN, high_value, LCD_RED);
+
 		Serial.print(F("Conversion: ")); Serial.print(final_countdown);
 		Serial.print(F(","));
 		Serial.print(final_countdown * 0.3);

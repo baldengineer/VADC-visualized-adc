@@ -29,9 +29,13 @@ const byte comparator_result = 7;
 bool start_SAR = false;
 uint8_t final_countdown =0;
 const byte dac_width = 4;
-double adc_vref = 5.0;
+double adc_vref = 4.92;
 double adc_voltage_step = adc_vref / ((pow(2,dac_width)-1.0));
 int comparator_value = 0;
+
+double dac_value_min = 0.0;
+double dac_value_max = 0.0;
+double dac_value_step = 0.0;
 
 unsigned long previous_print_millis = 0;
 unsigned long print_interval = 1000;
@@ -42,6 +46,7 @@ byte counter = 0x0;
 const byte button = 6;
 const byte dac_value_button =  A3;
 const byte step_button = A4;
+const byte vref_input = A1;
 
 bool stepper = false;
 
