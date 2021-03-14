@@ -63,13 +63,13 @@ void send_data_to_bits(uint32_t data_out) {
 }
 
 double measure_dac_value() {
-  return analogRead(A5) * (5.0/(pow(2,10)-1.0));
+  return analogRead(A5) * (adc_vref/(pow(2,10)));
 }
 
 void print_dac_value(uint16_t color) {
   char str_val[8] = {"0.00v"}; // = "00.00v";
   double current_dac_voltage = measure_dac_value();
-  Serial.print("current_dac_voltage = "); Serial.print(current_dac_voltage); Serial.println(" volts)");
+  Serial.print(F("current_dac_voltage = ")); Serial.print(current_dac_voltage); Serial.println(F(" volts)"));
   dtostrf(current_dac_voltage, 5, 2, str_val);
   tft_print_oneline(str_val, color);
 }
@@ -143,16 +143,6 @@ void dac_cal() {
   tft_print_oneline(msg, LCD_RED);
   send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
   delay(cal_delay);
-  
-  // set 0, measure the voltage
-  send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
-  delay(cal_delay);
-  dac_value_min = measure_dac_value();
-
-  // set 1, measure the voltage
-  send_data_to_bits(convert_to_bit(1)); // clear, good for scope view
-  delay(cal_delay);
-  dac_value_step = measure_dac_value();
 
   // set 15, measure the voltage
   send_data_to_bits(convert_to_bit(15)); // clear, good for scope view
@@ -160,19 +150,32 @@ void dac_cal() {
   dac_value_max = measure_dac_value();
 
   // set 8, measure the voltage
-   send_data_to_bits(convert_to_bit(8)); // clear, good for scope view
+  send_data_to_bits(convert_to_bit(8)); // clear, good for scope view
   delay(cal_delay);
   double dac_value_verify = measure_dac_value();
+
+  // set 1, measure the voltage
+  send_data_to_bits(convert_to_bit(1)); // clear, good for scope view
+  delay(cal_delay);
+  dac_value_step = measure_dac_value();
+
+  // set 0, measure the voltage
+  send_data_to_bits(convert_to_bit(0)); // clear, good for scope view
+  delay(cal_delay);
+  dac_value_min = measure_dac_value();
+
 
   char step_str[8];
   dtostrf(dac_value_step, 5, 2, step_str);
   char verify_str[8];
   dtostrf((dac_value_verify/8.0), 5, 2, verify_str);
 
+  send_data_to_bits(convert_to_bit(0));
+
   tft_print_twolines(step_str, LCD_BLUE, verify_str, LCD_GREEN);
 
-  // verify that it is 10% of expected
-  //delay(1000);
+  delay(1000);
+  tft_print_oneline(msg_ready, LCD_BLUE);
 
 }
 
@@ -190,14 +193,10 @@ void setup() {
 	pinMode(comparator_result, INPUT);
 
   pinMode(step_button, INPUT_PULLUP);
-	pinMode(dac_value_button, INPUT_PULLUP);
+	pinMode(cal_button, INPUT_PULLUP);
 	pinMode(button, INPUT_PULLUP);
 
-  //tft_print_twolines("1.21v", LCD_BLUE, "5.43v", LCD_GREEN);
   dac_cal();
-  while (digitalRead(button) == NOT_PRESSED);
-  char msg[6] = {"Ready"};
-  tft_print_oneline(msg, LCD_BLUE);
 }
 
 void loop() {
@@ -206,8 +205,8 @@ void loop() {
   handle_serial();
 
   // Print current DAC value (mostly for testing)
-  if (digitalRead(dac_value_button) == PRESSED)
-    print_dac_value(LCD_GREEN);
+  if (digitalRead(cal_button) == PRESSED)
+    dac_cal();
 
   // manual stepper mode, go one step at a time.
   if (digitalRead(step_button) == PRESSED) {
@@ -232,17 +231,25 @@ void loop() {
 		// sample Vin
     sample_vin();
 
-		final_countdown =0;
+		final_countdown = 0;
+
+    // string to display bit sequence on LCD
+    char bit_sequence[dac_width]; 
+    for (int x=0; x<dac_width; x++)
+      bit_sequence[x] = '?';
+
     // test one bit at a time, going from MSB to LSB
 		for (int x=(dac_width-1); x>=0; x--) {
+      // test the current  bit
 			bitWrite(final_countdown, x, 1);
 			send_data_to_bits(convert_to_bit(final_countdown));
       delay(10);
       print_dac_value(LCD_BLUE); // red is actually blue
-      if (stepper) while(digitalRead(step_button) == NOT_PRESSED);
-    
-      // just for our display, not used elsewhere
-			if (!stepper) delay(500);
+      if (stepper) 
+        while(digitalRead(step_button) == NOT_PRESSED);
+      else 
+        delay(500);
+      // capture comparator result, finalizing the current bit
 			bitWrite(final_countdown, x, digitalRead(comparator_result));
       print_dac_value(LCD_BLUE);
 		}

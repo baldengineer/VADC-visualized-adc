@@ -56,7 +56,6 @@ void init_tft() {
   tft.setTextWrap(false); //
 }
 
-
 // needed to change colstart and rowstart in the
 // library, per: https://github.com/adafruit/Adafruit-ST7735-Library/pull/126
 
